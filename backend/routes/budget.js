@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { budgetModel } = require("../models/budget");
+const { transactionModel } = require("../models/transaction");
 const { authMiddleware } = require("../middleware/auth");
 
 const budgetRouter = Router();
@@ -44,6 +45,44 @@ budgetRouter.get("/", async (req, res) => {
         res.status(500).json({
             message: "Server Error"
         })
+    }
+});
+
+//calculates budget usage 
+budgetRouter.get("/usage", async (req, res) => {
+    try {
+        const month = req.query.month;
+        if (!month) return res.status(400).json({ message: "Month param required"});
+
+        const budgets = await budgetModel.find({
+            userId: req.userId,
+            month
+        });
+
+        const spent = await transactionModel.aggregate([
+            { $match: { userId: req.userId, month, type: 'expense'}},
+            { $group: {_id: "$category", totalSpent: {$sum: "$amount"}}}
+        ]);
+
+        const usage = budgets.map(budget => {
+            const spentObj = spent.find(s => s._id === budget.category);
+            const amountSpent = spentObj ? Math.abs(spentObj.totalSpent) : 0;
+            const remaining = budget.amount - amountSpent;
+            const percentUsed = (amountSpent / budget.amount) * 100;
+            return {
+                category: budget.category,
+                budgetAmount: budget.amount,
+                amountSpent,
+                remaining,
+                percentUsed
+            };
+            
+        });
+
+        res.json({ usage });
+    } catch (error) {
+        console.error("Error fetching budget usage: ", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
