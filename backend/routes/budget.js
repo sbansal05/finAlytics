@@ -83,7 +83,7 @@ budgetRouter.put("/:id", async (req, res) => {
 //delete budget by Id
 budgetRouter.delete("/:id", async (req, res) => {
     try {
-        const budget = await budgetModel.findOne({
+        const budget = await budgetModel.findOneAndDelete({
             _id: req.params.id,
             userId: req.userId
         });
@@ -92,7 +92,7 @@ budgetRouter.delete("/:id", async (req, res) => {
                 message: "Budget not found"
             });
         }
-        res.json(200).json({ message: "Budget deleted"});
+        res.status(200).json({ message: "Budget deleted"});
     } catch (error) {
         console.log('Error deleting budget: ', error);
         res.status(500).json({ message: "Server error"});
