@@ -17,7 +17,7 @@ app.use(cors({
 const { authRouter } = require("./routes/auth");
 const { accountRouter } = require("./routes/account");
 const { transactionRouter } = require("./routes/transaction");
-// const { budgetRouter } = require("./routes/budget");
+const { budgetRouter } = require("./routes/budget");
 // const { goalsRouter } = require("./routes/goals");
 // const { analyticsRouter } = require("./routes/analytics")
 
@@ -26,7 +26,7 @@ const { transactionRouter } = require("./routes/transaction");
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/account", accountRouter);
 app.use("/api/v1/transaction", transactionRouter);
-// app.use("api/v1/budget", budgetRouter);
+app.use("api/v1/budget", budgetRouter);
 // app.use("express/v1/goals", goalsRouter);
 // app.use("/api/v1/analytics", analyticsRouter);
 
