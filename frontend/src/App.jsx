@@ -1,15 +1,34 @@
 import React, { useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
-import { AuthContext } from "./context/AuthContext.jsx";
+import TransactionsList from "./pages/Transactions/TransactionsList.jsx";
+import Navbar from "./components/Navbar.jsx";
+
 
 function App() {
   const { token } = useContext(AuthContext);
 
   return (
-    <div>
-      {token ? <Dashboard /> : <Login />}
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={token ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/transactions"
+          element={token ? <TransactionsList /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to={token ? "/dashboard": "/login"}  />}
+        />
+      </Routes>
+    </Router>
   );
 }
 
