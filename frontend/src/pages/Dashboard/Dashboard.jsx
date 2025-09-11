@@ -38,10 +38,25 @@ export default function Dashboard() {
         if (token) fetchData();
     }, [token]);
 
+    const income = summary.transactions
+        .filter(tx => tx.type === "income")
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
+    const expenses = summary.transactions
+        .filter(tx => tx.type === "income")
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
+    const net = income - expenses;
+
     return (
         <div>
             <button onClick={ logout }>Logout</button>
             <h1>Finance Dashboard</h1>
+            <h3>Summary</h3>
+            <p>Total Income: ${income.toFixed(2)}</p>
+            <p>Total Expenses: ${expenses.toFixed(2)}</p>
+            <p>Net Balance: ${net.toFixed(2)}</p>
+            
             <h2>Recent Transactions ({summary.transactions.length})</h2>
             <ul>
                 {summary.transactions.slice(0, 3).map(tx => (

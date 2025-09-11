@@ -154,6 +154,58 @@ transactionRouter.delete("/:id", async (req, res) => {
         console.log("Error deleting transaction");
         return res.status(500).json({ message: "Server error" });
     }
-})
+});
+
+transactionRouter.get("/:id", async (req, res) => {
+  try {
+    const transaction = await transactionModel.findOne({
+      _id: req.params.id,
+      userId: req.userId,
+    });
+
+    if (!transaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    return res.json({ transaction });
+  } catch (error) {
+    console.log("Error fetching transaction:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+transactionRouter.get("/summary", async (req, res) => {
+    try {
+        const userId = req.req.userId;
+
+        const aggregation = await transactionModel.aggregate([
+            { $match: { userId: mongoose.Types.ObjectId(userId)}},
+            {
+                $group: {
+                    _id: "$type",
+                    totalAmount: { $sum: "$amount" }
+                }
+            }
+        ]);
+
+        const summary = {
+            income: 0,
+            expense: 0,
+            net: 0
+        };
+
+        aggregation.forEach(item => {
+            if (item._id === "income") summary.income = item.totalAmount;
+            else if (item._id === "expense") summary.expense = item.totalAmount;
+        });
+
+        summary.net = summary.income + summary.expense;
+
+        res.json(summary);
+    } catch (error) {
+        console.error("Failed to get summary:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 module.exports = { transactionRouter };

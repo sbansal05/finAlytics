@@ -4,6 +4,7 @@ import { AuthContext } from "./context/AuthContext.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import TransactionsList from "./pages/Transactions/TransactionsList.jsx";
+import TransactionForm from "./pages/Transactions/TransactionForm.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 
@@ -22,6 +23,14 @@ function App() {
         <Route
           path="/transactions"
           element={token ? <TransactionsList /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/transactions/add"
+          element={token ? <TransactionForm /> : <Navigate to="/login "/>}
+        />
+        <Route
+          path="/transactions/edit/:id"
+          element={token ? <TransactionForm /> : <Navigate to="/login" />}
         />
         <Route
           path="*"
