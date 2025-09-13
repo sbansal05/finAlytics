@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import TransactionsList from "./pages/Transactions/TransactionsList.jsx";
 import TransactionForm from "./pages/Transactions/TransactionForm.jsx";
 import Navbar from "./components/Navbar.jsx";
+import Accounts from "./pages/Accounts/Accounts.jsx";
 
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
         <Route
           path="*"
           element={<Navigate to={token ? "/dashboard": "/login"}  />}
+        />
+        <Route
+          path="/accounts" element={<Accounts />}
         />
       </Routes>
     </Router>

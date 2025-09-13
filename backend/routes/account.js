@@ -72,7 +72,7 @@ accountRouter.put('/:id', async (req, res) => {
 
         if (name) account.name = name;
         if (type) {
-            if(!['checking', 'savings', 'credit']) {
+            if(!['checking', 'savings', 'credit'].includes(type)) {
                 return res.status(400).json({
                     message: "Invalid account type"
                 })
@@ -110,6 +110,22 @@ accountRouter.delete('/:id', async (req, res) => {
         })
     } catch (error) {
         console.log("Error deleting account: ", error)
+    }
+});
+
+accountRouter.get('/id', async (req, res) => {
+    try {
+        const account = await accountModel.findOne({
+            _id: req.params.id,
+            userId: req.userId
+        });
+        if (!account) {
+            return res.status(404).json({ message: "Account not"});
+        }
+        res.json({ account })
+    } catch (error) {
+        console.error("Error fetching account", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
