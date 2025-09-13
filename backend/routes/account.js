@@ -17,6 +17,7 @@ accountRouter.get('/', async (req, res) => {
         });
     } catch (error){
        console.log("Error retreiving accounts: ", error);
+       res.status(500).json({ message: "Failed to fetch accounts"});
     }
 });
 
