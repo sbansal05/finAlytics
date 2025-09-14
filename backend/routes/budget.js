@@ -85,6 +85,21 @@ budgetRouter.get("/usage", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+budgetRouter.get("/:id", async (req, res) => {
+  try {
+    const budget = await budgetModel.findOne({
+      _id: req.params.id,
+      userId: req.userId,
+    });
+    if (!budget) {
+      return res.status(404).json({ message: "Budget not found" });
+    }
+    res.json({ budget });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 //update budget by id
 budgetRouter.put("/:id", async (req, res) => {

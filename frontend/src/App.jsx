@@ -7,6 +7,7 @@ import TransactionsList from "./pages/Transactions/TransactionsList.jsx";
 import TransactionForm from "./pages/Transactions/TransactionForm.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Accounts from "./pages/Accounts/Accounts.jsx";
+import Budgets from "./pages/Budgets/Budgets.jsx";
 
 
 function App() {
@@ -40,6 +41,13 @@ function App() {
         <Route
           path="/accounts" element={<Accounts />}
         />
+        <Route
+        
+          path="/budgets"
+          element={token ? <Budgets /> : <Navigate to="/login" />}
+        />
+
+        
       </Routes>
     </Router>
   );

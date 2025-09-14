@@ -67,6 +67,22 @@ goalsRouter.put("/:id", async (req, res) => {
     }
 });
 
+goalsRouter.get("/:id", async (req, res) => {
+  try {
+    const goal = await goalModel.findOne({
+      _id: req.params.id,
+      userId: req.userId,
+    });
+    if (!goal) {
+      return res.status(404).json({ message: "Goal not found" });
+    }
+    res.json({ goal });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 // Delete goal
 goalsRouter.delete("/:id", async (req, res) => {
   try {
