@@ -208,4 +208,35 @@ transactionRouter.get("/summary", async (req, res) => {
     }
 });
 
+transactionRouter.get("/summary/filter", async (req, res) => {
+  try {
+    const query = { userId: req.userId };
+
+    if (req.query.accountId) query.accountId = req.query.accountId;
+
+    if (req.query.type) {
+      if (["income", "expense"].includes(req.query.type)) {
+        query.type = req.query.type;
+      } else {
+        return res.status(400).json({ message: "Invalid transaction type filter" });
+      }
+    }
+
+    if (req.query.category) query.category = req.query.category;
+
+    if (req.query.startDate || req.query.endDate) {
+      query.date = {};
+      if (req.query.startDate) query.date.$gte = new Date(req.query.startDate);
+      if (req.query.endDate) query.date.$lte = new Date(req.query.endDate);
+    }
+
+    const transactions = await transactionModel.find(query).sort({ date: -1 });
+    res.json({ transactions });
+  } catch (error) {
+    console.error("Failed to fetch filtered transactions", error);
+    res.status(500).json({ message: "Failed to fetch filtered transactions" });
+  }
+});
+
+
 module.exports = { transactionRouter };
