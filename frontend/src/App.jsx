@@ -8,6 +8,7 @@ import TransactionForm from "./pages/Transactions/TransactionForm.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Accounts from "./pages/Accounts/Accounts.jsx";
 import Budgets from "./pages/Budgets/Budgets.jsx";
+import Goals from "./pages/Goals/Goals.jsx";
 
 
 function App() {
@@ -39,12 +40,16 @@ function App() {
           element={<Navigate to={token ? "/dashboard": "/login"}  />}
         />
         <Route
-          path="/accounts" element={<Accounts />}
+          path="/accounts" 
+          element={token ? <Accounts /> : <Navigate to="/login" />}
         />
         <Route
-        
           path="/budgets"
           element={token ? <Budgets /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/goals"
+          element={token ? <Goals /> : <Navigate to="/login" />}
         />
 
         
