@@ -1,0 +1,87 @@
+/* Container for centralizing and max width */
+.container {
+  max-width: 700px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  padding: 0 15px;
+  color: #000;
+}
+
+/* Headings consistent and clear */
+h2 {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Links as simple text links in header/nav if any */
+a {
+  color: #0000ee;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Buttons - basic styling */
+button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+button:hover {
+  background-color: #d0d0d0;
+}
+
+/* Filters container */
+.filters {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Inputs and selects consistent */
+.filters input,
+.filters select {
+  padding: 6px 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Lists */
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 10px;
+  line-height: 1.4rem;
+}
+
+/* Summary text */
+.container > div p {
+  margin: 0.2rem 0;
+}
+
+/* Responsive adjustments if needed */
+@media (max-width: 480px) {
+  .filters {
+    flex-direction: column;
+  }
+  .filters input,
+  .filters select,
+  .filters button {
+    width: 100%;
+    margin-right: 0;
+  }
+  button {
+    margin-left: 0;
+  }
+}

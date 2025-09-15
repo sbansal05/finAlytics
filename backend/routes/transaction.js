@@ -156,30 +156,14 @@ transactionRouter.delete("/:id", async (req, res) => {
     }
 });
 
-transactionRouter.get("/:id", async (req, res) => {
-  try {
-    const transaction = await transactionModel.findOne({
-      _id: req.params.id,
-      userId: req.userId,
-    });
 
-    if (!transaction) {
-      return res.status(404).json({ message: "Transaction not found" });
-    }
-
-    return res.json({ transaction });
-  } catch (error) {
-    console.log("Error fetching transaction:", error);
-    return res.status(500).json({ message: "Server error" });
-  }
-});
 
 transactionRouter.get("/summary", async (req, res) => {
     try {
-        const userId = req.req.userId;
+        const userId = req.userId;
 
         const aggregation = await transactionModel.aggregate([
-            { $match: { userId: mongoose.Types.ObjectId(userId)}},
+            { $match: { userId: new mongoose.Types.ObjectId(userId)}},
             {
                 $group: {
                     _id: "$type",
@@ -235,6 +219,27 @@ transactionRouter.get("/summary/filter", async (req, res) => {
   } catch (error) {
     console.error("Failed to fetch filtered transactions", error);
     res.status(500).json({ message: "Failed to fetch filtered transactions" });
+  }
+});
+
+
+transactionRouter.get("/:id", async (req, res) => {
+  try {
+    const transaction = await transactionModel.findOne({
+      _id: req.params.id,
+      userId: req.userId,
+    });
+
+    if (!transaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid transaction id'})
+    }
+    return res.json({ transaction });
+  } catch (error) {
+    console.log("Error fetching transaction:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
