@@ -19,7 +19,6 @@ const { accountRouter } = require("./routes/account");
 const { transactionRouter } = require("./routes/transaction");
 const { budgetRouter } = require("./routes/budget");
 const { goalsRouter } = require("./routes/goals");
-// const { analyticsRouter } = require("./routes/analytics")
 
 
 
@@ -27,8 +26,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/account", accountRouter);
 app.use("/api/v1/transaction", transactionRouter);
 app.use("/api/v1/budget", budgetRouter);
-app.use("/api/v1/goal", goalsRouter);
-// app.use("/api/v1/analytics", analyticsRouter);
+app.use("/api/v1/goals", goalsRouter);
 
 
 async function main() {

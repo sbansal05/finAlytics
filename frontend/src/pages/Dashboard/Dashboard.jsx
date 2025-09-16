@@ -60,7 +60,7 @@ export default function Dashboard() {
           axios.get(`${apiUrl}/api/v1/budget`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`${apiUrl}/api/v1/goal`, {
+          axios.get(`${apiUrl}/api/v1/goals`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get(`${apiUrl}/api/v1/transaction/category-summary`, {
@@ -74,7 +74,6 @@ export default function Dashboard() {
         setBudgets(budgetsRes.data.budgets);
         setGoals(goalsRes.data.goals);
 
-        // Map backend data into full category list with default 0 values
         const transformedCategoryData = ALL_CATEGORIES.map((cat) => {
           const found = catRes.data.find((item) => item.category.toLowerCase() === cat.toLowerCase());
           return {
@@ -149,8 +148,7 @@ export default function Dashboard() {
                 cx="50%"
                 cy="50%"
                 outerRadius={90}
-                // removing innerRadius to make it a pie, not donut
-                // innerRadius={65}
+                
                 stroke="#23272f"
                 strokeWidth={2}
               >
@@ -176,11 +174,7 @@ export default function Dashboard() {
             <p>No category data to display.</p>
           )}
         </div>
-        <div style={{ flex: 1 }}>
-          <h2>Monthly Trends</h2>
-          {/* Placeholder for line chart */}
-          <p style={{ color: "#999" }}>Monthly trends chart coming soon.</p>
-        </div>
+        
       </div>
 
       <div className="dashboard-section">

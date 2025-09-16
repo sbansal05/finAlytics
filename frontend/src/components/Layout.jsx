@@ -12,7 +12,6 @@ export default function Layout({ children }) {
           <li><NavLink to="/accounts" className={({ isActive }) => (isActive ? "active" : "")}>Accounts</NavLink></li>
           <li><NavLink to="/budgets" className={({ isActive }) => (isActive ? "active" : "")}>Budgets</NavLink></li>
           <li><NavLink to="/goals" className={({ isActive }) => (isActive ? "active" : "")}>Goals</NavLink></li>
-          <li><NavLink to="/import" className={({ isActive }) => (isActive ? "active" : "")}>Import Data</NavLink></li>
         </ul>
       </nav>
       <main className="main-content">{children}</main>
