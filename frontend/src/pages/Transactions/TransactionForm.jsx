@@ -1,207 +1,170 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { AuthContext } from "../../context/AuthContext.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+import "./TransactionsList.css";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+export default function TransactionForm({
+  initialData,
+  accounts,
+  categories,
+  onClose,
+  token,
+  apiUrl
+}) {
+  const [formData, setFormData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
-export default function TransactionForm() {
-    const { token } = useContext(AuthContext);
-    const navigate = useNavigate();
-    const { id } = useParams();
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: name === "amount" ? Number(value) : value 
+    }));
+  }
 
-    const [formData, setFormData] = useState({
-        description: "",
-        amount: "",
-        date: "",
-        category: "",
-        accountId: "",
-        type: ""
-    });
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setErrMsg("");
+    
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      };
 
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [accounts, setAccounts] = useState([]);
+      if (formData._id) {
+        // Edit existing transaction
+        await axios.put(`${apiUrl}/api/v1/transaction/${formData._id}`, formData, { headers });
+      } else {
+        // Create new transaction
+        await axios.post(`${apiUrl}/api/v1/transaction`, formData, { headers });
+      }
+      onClose(); // Close modal and refresh parent
+    } catch (error) {
+      setErrMsg("Failed to save transaction");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-    useEffect(() => {
-        async function fetchAccounts() {
-            try {
-                const res = await axios.get(`${apiUrl}/api/v1/account`, {
-                    headers: {Authorization: `Bearer ${token}`}
-                });
-                setAccounts(res.data.accounts);
-            } catch (error) {
-                
-            }
-            
-        }
-        if (token) fetchAccounts();
-    }, [token]);
-
-    useEffect(() => {
-        if (id) {
-            async function fetchTransaction() {
-                try {
-                    setLoading(true);
-                    const res = await axios.get(`${apiUrl}/api/v1/transaction/${id}`, {
-                        headers: {Authorization: `Bearer ${token}`}
-                    });
-                    setFormData({
-                        description: res.data.transaction.description,
-                        amount: res.data.transaction.amount,
-                        date: res.data.transaction.date.slice(0, 10),
-                        category: res.data.transaction.category
-                    });
-                    setLoading(false);
-                } catch (error) {
-                    setError("Failed to load transaction");
-                    setLoading(false);
-                }
-            }
-            fetchTransaction();
-        }
-    }, [id, token]);
-
-    const handleChange = e => {
-        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    };
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setError(null);
-        console.log('Submit payload:', formData);
-
-        if (
-            !formData.accountId ||
-            !formData.description ||
-            !formData.amount ||
-            !formData.date ||
-            !formData.category || 
-            !formData.type
-        ) {
-            setError("Please fill in all fields");
-            return;
-        }
-
-        try {
-            setLoading(true);
-
-            const payload = {
-                accountId: formData.accountId,
-                amount: Number(formData.amount),
-                description: formData.description,
-                category: formData.category,
-                type: formData.type,
-                date: formData.date
-                
-            };
-
-            if (id) {
-                await axios.put(`${apiUrl}/api/v1/transaction/${id}`, payload, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                });
-            } else {
-                await axios.post(`${apiUrl}/api/v1/transaction`, payload, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                });
-            }
-
-            setLoading(false);
-            navigate("/transactions");
-        } catch (error) {
-            setError("Failed to save transaction");
-            setLoading(false);
-        }
-    };
-
-    if (loading) return <p>Loading...</p>
-
-    return (
-        <div>
-            <h2>{id ? 'Edit': "Add"} Transaction</h2>
-            {error && <p style={{ color: "red"}}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Account:</label>
-                    <select
-                        name="accountId"
-                        value={formData.accountId}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select Account</option>
-                        {accounts.map(acc => (
-                            <option key={acc._id} value={acc._id}>
-                                {acc.name} ({acc.type}): Balance ${acc.balance}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-
-                <div>
-                    <label>Amount:</label>
-                    <input
-                        type="number"
-                        step="1"
-                        name="amount"
-                        value={formData.amount}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Description:</label>
-                    <input
-                        type="text"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                
-                <div>
-                <label>Category:</label>
-                <input
-                    type="text"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    required
-                />
-                </div>
-                <div>
-                    <label>Date:</label>
-                    <input
-                        type="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Type:</label>
-                    <select
-                        name="type"
-                        value={formData.type}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select Type</option>
-                        <option value="expense">Expense</option>
-                        <option value="income">Income</option>
-                    </select>
-                </div>
-                <button type="submit">{id ? "Update" : "Add"} Transaction</button>
-            </form>
+  return (
+    <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <form className="modal-form" onSubmit={handleSubmit}>
+        <div className="modal-title">
+          {formData._id ? "Edit Transaction" : "Add Transaction"}
+          <span className="modal-close" onClick={onClose}>&times;</span>
         </div>
-    );
+        
+        {errMsg && <div className="modal-error">{errMsg}</div>}
+        
+        <div className="modal-group">
+          <label>Amount</label>
+          <input
+            type="number"
+            name="amount"
+            className="modern-input"
+            required
+            value={formData.amount}
+            onChange={handleChange}
+            step="0.01"
+          />
+        </div>
+        
+        <div className="modal-group">
+          <label>Description</label>
+          <input
+            type="text"
+            name="description"
+            className="modern-input"
+            required
+            value={formData.description}
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div className="modal-group">
+          <label>Category</label>
+          <select
+            name="category"
+            className="modern-input"
+            required
+            value={formData.category}
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Category</option>
+            <option value="Food">Food</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Job">Job</option>
+            <option value="Clothes">Clothes</option>
+            {categories.filter(cat => !['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping', 'Healthcare', 'Job', 'Clothes'].includes(cat)).map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="modal-group">
+          <label>Account</label>
+          <select
+            name="accountId"
+            className="modern-input"
+            required
+            value={formData.accountId}
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Account</option>
+            {accounts.map(acc => (
+              <option key={acc._id} value={acc._id}>{acc.name}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="modal-group">
+          <label>Date</label>
+          <input
+            type="date"
+            name="date"
+            className="modern-input"
+            required
+            value={formData.date}
+            onChange={handleChange}
+          />
+        </div>
+        
+        <div className="modal-group">
+          <label>Type</label>
+          <select
+            name="type"
+            className="modern-input"
+            required
+            value={formData.type}
+            onChange={handleChange}
+          >
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        
+        <div className="modal-actions">
+          <button
+            type="button"
+            className="action-btn"
+            style={{ background: "#31393e", color: "#ccc" }}
+            onClick={onClose}
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button className="add-transaction-btn" type="submit" disabled={loading}>
+            {loading ? "Saving..." : (formData._id ? "Save Changes" : "Add Transaction")}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }

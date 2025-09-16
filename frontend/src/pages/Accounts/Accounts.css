@@ -1,0 +1,109 @@
+.accounts-section {
+  margin-top: 32px;
+}
+
+.accounts-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.accounts-title {
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.add-account-btn {
+  padding: 10px 22px;
+  background: #19e0ff;
+  color: #232531;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.01rem;
+  cursor: pointer;
+  transition: background 0.19s;
+}
+.add-account-btn:hover {
+  background: #11bed6;
+}
+
+.accounts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.account-card {
+  background: #23272f;
+  border-radius: 15px;
+  box-shadow: 0 3px 14px 1px #15181c70;
+  padding: 26px 32px 15px 32px;
+  min-width: 320px;
+  max-width: 340px;
+  margin-bottom: 18px;
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.account-title {
+  font-size: 1.19rem;
+  font-weight: 400;
+  color: #e9f8fa;
+  margin-bottom: 6px;
+}
+.account-sub {
+  color: #b6bece;
+  font-size: 0.98rem;
+  margin-bottom: 16px;
+  font-weight: 200;
+}
+.account-balance {
+  font-size: 1.57rem;
+  font-weight: 200;
+  margin-bottom: 18px;
+}
+.account-balance.positive {
+  color: #42caff;
+}
+.account-balance.negative {
+  color: #fc5a5a;
+}
+
+.account-info-row {
+  display: flex;
+  justify-content: space-between;
+  color: #aab2ba;
+  font-size: 0.93rem;
+  font-weight: 100;
+  margin-top: auto;
+}
+.modern-label {
+  display: block;
+  color: #e7e9ec;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.modern-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #232a38;
+  border-radius: 7px;
+  border: 1.5px solid #31363f;
+  color: #e7e9ec;
+  font-size: 1.04rem;
+  outline: none;
+  font-family: inherit;
+  margin-bottom: 0;
+  transition: border-color 0.18s;
+}
+.modern-input:focus {
+  border-color: #19e0ff;
+  background: #262d39;
+}

@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Layout from "../../components/Layout.jsx";
+import TransactionForm from "./TransactionForm.jsx";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import "../../styles/global.css";
 import "./TransactionsList.css";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function TransactionsList() {
@@ -14,26 +16,33 @@ export default function TransactionsList() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [accountFilter, setAccountFilter] = useState("");
+  const [editingTx, setEditingTx] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
-      const headers = { headers: { Authorization: `Bearer ${token}` }};
-      // Get transactions
-      const txRes = await axios.get(`${apiUrl}/api/v1/transaction`, headers);
-      setTransactions(txRes.data.transactions);
-
-      // For category filter dropdown: gather all unique categories
-      const catSet = new Set(txRes.data.transactions.map(tx => tx.category));
-      setCategories([...catSet]);
-
-      // For account filter dropdown
-      const accRes = await axios.get(`${apiUrl}/api/v1/account`, headers);
-      setAccounts(accRes.data.accounts);
-    }
-    if(token) fetchData();
+    fetchData();
   }, [token]);
 
-  // Filtering logic
+  async function fetchData() {
+    try {
+      const headers = { headers: { Authorization: `Bearer ${token}` }};
+      
+      // Fetch transactions
+      const txRes = await axios.get(`${apiUrl}/api/v1/transaction`, headers);
+      setTransactions(txRes.data.transactions || []);
+
+      // Get unique categories from transactions
+      const catSet = new Set((txRes.data.transactions || []).map(tx => tx.category));
+      setCategories([...catSet]);
+
+      // Fetch accounts
+      const accRes = await axios.get(`${apiUrl}/api/v1/account`, headers);
+      setAccounts(accRes.data.accounts || []);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  }
+
+  // Filter transactions based on search and filters
   const filteredTx = transactions.filter(tx => {
     const matchSearch = (tx.description?.toLowerCase() ?? "").includes(search.toLowerCase());
     const matchCategory = !categoryFilter || tx.category === categoryFilter;
@@ -41,15 +50,57 @@ export default function TransactionsList() {
     return matchSearch && matchCategory && matchAccount;
   });
 
+  // Open modal for adding new transaction
+  function handleAdd() {
+    setEditingTx({
+      amount: "",
+      description: "",
+      category: "",
+      accountId: "",
+      date: new Date().toISOString().split('T')[0],
+      type: "expense"
+    });
+  }
+
+  // Open modal for editing existing transaction
+  function handleEdit(tx) {
+    setEditingTx({
+      ...tx,
+      date: tx.date ? tx.date.split("T")[0] : new Date().toISOString().split('T')[0],
+    });
+  }
+
+  // Close modal
+  function handleModalClose() {
+    setEditingTx(null);
+    fetchData(); // Refresh data after modal closes
+  }
+
+  // Delete transaction
+  async function handleDelete(txId) {
+    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+    
+    try {
+      await axios.delete(`${apiUrl}/api/v1/transaction/${txId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchData(); // Refresh data after deletion
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+      alert("Failed to delete transaction");
+    }
+  }
+
   return (
     <Layout>
       <section className="transactions-section">
         <div className="transactions-header-row">
           <span className="transactions-title">Transactions</span>
-          <button className="add-transaction-btn">
+          <button className="add-transaction-btn" onClick={handleAdd}>
             Add Transaction
           </button>
         </div>
+        
         <div className="transactions-filters-row">
           <input
             className="transactions-search-input"
@@ -78,6 +129,7 @@ export default function TransactionsList() {
             ))}
           </select>
         </div>
+        
         <div className="transactions-table-container">
           <table className="transactions-table">
             <thead>
@@ -94,14 +146,18 @@ export default function TransactionsList() {
               {filteredTx.map(tx => (
                 <tr key={tx._id}>
                   <td>
-                    {new Date(tx.date).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+                    {new Date(tx.date).toLocaleDateString(undefined, { 
+                      year: "numeric", 
+                      month: "short", 
+                      day: "numeric" 
+                    })}
                   </td>
                   <td style={{ fontWeight: 700 }}>{tx.description}</td>
                   <td>
                     <span className="category-pill">{tx.category}</span>
                   </td>
                   <td>
-                    {accounts.find(acc => acc._id === tx.accountId)?.name || ""}
+                    {accounts.find(acc => acc._id === tx.accountId)?.name || "Unknown"}
                   </td>
                   <td>
                     <span className={tx.amount >= 0 ? "amount-positive" : "amount-negative"}>
@@ -110,8 +166,8 @@ export default function TransactionsList() {
                     </span>
                   </td>
                   <td>
-                    <button className="action-btn">Edit</button>
-                    <button className="action-btn">Delete</button>
+                    <button className="action-btn" onClick={() => handleEdit(tx)}>Edit</button>
+                    <button className="action-btn" onClick={() => handleDelete(tx._id)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -119,6 +175,17 @@ export default function TransactionsList() {
           </table>
         </div>
       </section>
+      
+      {editingTx && (
+        <TransactionForm
+          initialData={editingTx}
+          accounts={accounts}
+          categories={categories}
+          onClose={handleModalClose}
+          token={token}
+          apiUrl={apiUrl}
+        />
+      )}
     </Layout>
   );
 }
