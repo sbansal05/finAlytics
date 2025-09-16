@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:900&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background-color: #181b20;
+  color: #f3f6fa;
+  overflow-x: hidden;
+}
+
+a {
+  color: #5ecfec;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 210px;
+  height: 100vh;
+  background-color: #212531;
+  color: #b6bece;
+  padding-top: 35px;
+  font-size: 1.08rem;
+  box-sizing: border-box;
+}
+
+.sidebar-logo {
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.42rem;
+  font-weight: 900;
+  color: #5ecfec;
+  margin-bottom: 25px;
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sidebar-nav li a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  padding: 14px 32px;
+  border-radius: 6px 32px 32px 6px;
+  margin-bottom: 3px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-nav li a.active,
+.sidebar-nav li a:hover {
+  background-color: #20bfcf;
+  color: #23242f;
+  font-weight: bold;
+}
+
+.main-content {
+  margin-left: 210px;
+  padding: 42px 45px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.card-row {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #23272f;
+  border-radius: 11px;
+  padding: 24px 28px;
+  flex: 1 1 30%;
+  box-shadow: 0 3px 14px 1px #15181c70;
+  font-size: 1.13rem;
+}
+
+.card .label {
+  font-size: 0.9rem;
+  color: #b6bece;
+  margin-bottom: 5px;
+}
+
+.card .value {
+  font-weight: 900;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.card .value.income {
+  color: #38d6ab;
+}
+
+.card .value.expense {
+  color: #fc5a5a;
+}
+
+.dashboard-section {
+  margin-top: 32px;
+}
+
+.dashboard-section h2 {
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+}
+
+.dashboard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-list li {
+  background: #23272f;
+  border-radius: 6px;
+  padding: 18px 24px;
+  margin-bottom: 9px;
+  color: #c7ccdb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 14px 0 #15181c70;
+  font-size: 1rem;
+}
+
+.dashboard-list li .description {
+  font-weight: 700;
+}
+
+.dashboard-list li .amount {
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.dashboard-list li .amount.positive {
+  color: #38d6ab;
+}
+
+.dashboard-list li .amount.negative {
+  color: #fc5a5a;
+}
+
+.piechart-section {
+  background: #23272f;
+  border-radius: 14px;
+  box-shadow: 0 3px 14px 1px #15181c70;
+  padding: 32px 16px 16px 16px;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  min-width: 370px;
+  margin-left: 0;
+}
+
+.recharts-pie-label-text {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  fill: #fff !important;
+  text-shadow: 0 2px 4px #15181cA0;
+}

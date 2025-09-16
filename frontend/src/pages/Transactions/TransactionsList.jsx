@@ -1,129 +1,124 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import Layout from "../../components/Layout.jsx";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import { Link } from "react-router-dom";
-import './TransactionsList.css';
-
+import "../../styles/global.css";
+import "./TransactionsList.css";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function TransactionsList() {
   const { token } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
-  const [summary, setSummary] = useState({ income: 0, expense: 0, net: 0 });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const [filters, setFilters] = useState({
-    type: "",
-    category: "",
-    startDate: "",
-    endDate: "",
-  });
+  const [categories, setCategories] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [accountFilter, setAccountFilter] = useState("");
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        setLoading(true);
-        const [transRes, summaryRes] = await Promise.all([
-          axios.get(`${apiUrl}/api/v1/transaction`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${apiUrl}/api/v1/transaction/summary`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-        setTransactions(transRes.data.transactions);
-        setSummary(summaryRes.data);
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to load transactions or summary");
-        setLoading(false);
-      }
+      const headers = { headers: { Authorization: `Bearer ${token}` }};
+      // Get transactions
+      const txRes = await axios.get(`${apiUrl}/api/v1/transaction`, headers);
+      setTransactions(txRes.data.transactions);
+
+      // For category filter dropdown: gather all unique categories
+      const catSet = new Set(txRes.data.transactions.map(tx => tx.category));
+      setCategories([...catSet]);
+
+      // For account filter dropdown
+      const accRes = await axios.get(`${apiUrl}/api/v1/account`, headers);
+      setAccounts(accRes.data.accounts);
     }
-    if (token) {
-      fetchData();
-    }
+    if(token) fetchData();
   }, [token]);
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleResetFilters = () => {
-    setFilters({ type: "", category: "", startDate: "", endDate: "" });
-  };
-
-  async function handleDelete(id) {
-    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
-    try {
-      await axios.delete(`${apiUrl}/api/v1/transaction/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setTransactions((prev) => prev.filter((tx) => tx._id !== id));
-    } catch {
-      alert("Failed to delete transaction");
-    }
-  }
-
-  if (loading) return <p>Loading Transactions...</p>;
-
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  // Filtering logic
+  const filteredTx = transactions.filter(tx => {
+    const matchSearch = (tx.description?.toLowerCase() ?? "").includes(search.toLowerCase());
+    const matchCategory = !categoryFilter || tx.category === categoryFilter;
+    const matchAccount = !accountFilter || tx.accountId === accountFilter;
+    return matchSearch && matchCategory && matchAccount;
+  });
 
   return (
-    <div className="container">
-      <Link to="/transactions/add">
-        <button>Add Transaction</button>
-      </Link>
-
-      <h2>Summary</h2>
-      <div>
-        <p>Total Income: ${summary.income.toFixed(2)}</p>
-        <p>Total Expenses: ${Math.abs(summary.expense).toFixed(2)}</p>
-        <p>
-          <strong>Net Balance: ${summary.net.toFixed(2)}</strong>
-        </p>
-      </div>
-
-      <h2>Filter Transactions</h2>
-      <div className="filters">
-        <select name="type" value={filters.type} onChange={handleFilterChange}>
-          <option value="">All Types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          value={filters.category}
-          onChange={handleFilterChange}
-        />
-
-        <input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} />
-
-        <input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} />
-
-        <button onClick={handleResetFilters}>Reset Filters</button>
-      </div>
-
-      <h2>Recent Transactions ({transactions.length})</h2>
-      {transactions.length === 0 ? (
-        <p>No transactions found.</p>
-      ) : (
-        <ul>
-          {transactions.map((tx) => (
-            <li key={tx._id}>
-              {tx.description} - ${Math.abs(tx.amount)} on {new Date(tx.date).toLocaleDateString()}
-              <Link to={`/transactions/edit/${tx._id}`}>
-                <button>Edit</button>
-              </Link>
-              <button onClick={() => handleDelete(tx._id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <Layout>
+      <section className="transactions-section">
+        <div className="transactions-header-row">
+          <span className="transactions-title">Transactions</span>
+          <button className="add-transaction-btn">
+            Add Transaction
+          </button>
+        </div>
+        <div className="transactions-filters-row">
+          <input
+            className="transactions-search-input"
+            placeholder="Search transactions..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <select
+            className="transactions-select"
+            value={categoryFilter}
+            onChange={e => setCategoryFilter(e.target.value)}
+          >
+            <option value="">All Categories</option>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+          <select
+            className="transactions-select"
+            value={accountFilter}
+            onChange={e => setAccountFilter(e.target.value)}
+          >
+            <option value="">All Accounts</option>
+            {accounts.map(acc => (
+              <option key={acc._id} value={acc._id}>{acc.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="transactions-table-container">
+          <table className="transactions-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Account</th>
+                <th>Amount</th>
+                <th style={{ textAlign: "center" }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTx.map(tx => (
+                <tr key={tx._id}>
+                  <td>
+                    {new Date(tx.date).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+                  </td>
+                  <td style={{ fontWeight: 700 }}>{tx.description}</td>
+                  <td>
+                    <span className="category-pill">{tx.category}</span>
+                  </td>
+                  <td>
+                    {accounts.find(acc => acc._id === tx.accountId)?.name || ""}
+                  </td>
+                  <td>
+                    <span className={tx.amount >= 0 ? "amount-positive" : "amount-negative"}>
+                      {tx.amount >= 0 ? "$" : "-$"}
+                      {Math.abs(tx.amount).toFixed(2)}
+                    </span>
+                  </td>
+                  <td>
+                    <button className="action-btn">Edit</button>
+                    <button className="action-btn">Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </Layout>
   );
 }

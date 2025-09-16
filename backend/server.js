@@ -27,7 +27,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/account", accountRouter);
 app.use("/api/v1/transaction", transactionRouter);
 app.use("/api/v1/budget", budgetRouter);
-app.use("/api/v1/goals", goalsRouter);
+app.use("/api/v1/goal", goalsRouter);
 // app.use("/api/v1/analytics", analyticsRouter);
 
 

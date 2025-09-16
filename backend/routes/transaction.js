@@ -221,6 +221,32 @@ transactionRouter.get("/summary/filter", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch filtered transactions" });
   }
 });
+transactionRouter.get("/category-summary", async (req, res) => {
+  try {
+    const userId = req.userId;
+    const aggregation = await transactionModel.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: "$category",
+          totalAmount: { $sum: "$amount" }
+        }
+      },
+      {
+        $project: {
+          category: "$_id",
+          totalAmount: 1,
+          _id: 0
+        }
+      }
+    ]);
+    res.json(aggregation);
+  } catch (error) {
+    console.error("Failed to get category summary:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 
 transactionRouter.get("/:id", async (req, res) => {
