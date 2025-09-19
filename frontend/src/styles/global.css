@@ -172,4 +172,27 @@ a:hover {
   font-weight: 700 !important;
   fill: #fff !important;
   text-shadow: 0 2px 4px #15181cA0;
+} 
+.app-container {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  color: #e7ecf2;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #181b20;
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    max-width: 100vw;
+    padding: 0 7vw;
+  }
+  .app-container > * {
+    width: 100%;
+  }
 }
