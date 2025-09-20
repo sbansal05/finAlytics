@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext.jsx";
-import Login from "./pages/Login.jsx";
+import Login from "./pages/Login/Login.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import TransactionsList from "./pages/Transactions/TransactionsList.jsx";
 import TransactionForm from "./pages/Transactions/TransactionForm.jsx";

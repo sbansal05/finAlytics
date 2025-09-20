@@ -1,20 +1,40 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import "./Layout.css"
+import React, { useState } from "react";
+import "./Layout.css";
+
 export default function Layout({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
-    <div className="layout-container"> {/* flex container */}
-      <nav className="sidebar">
+    <>
+      <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+        ☰
+      </button>
+
+      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <button
+          className="sidebar-close-btn"
+          onClick={closeSidebar}
+          aria-label="Close Sidebar"
+        >
+          ×
+        </button>
+
         <div className="sidebar-logo">Finance Dashboard</div>
-        <ul className="sidebar-nav">
-          <li><NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>Dashboard</NavLink></li>
-          <li><NavLink to="/transactions" className={({ isActive }) => isActive ? "active" : ""}>Transactions</NavLink></li>
-          <li><NavLink to="/accounts" className={({ isActive }) => isActive ? "active" : ""}>Accounts</NavLink></li>
-          <li><NavLink to="/budgets" className={({ isActive }) => isActive ? "active" : ""}>Budgets</NavLink></li>
-          <li><NavLink to="/goals" className={({ isActive }) => isActive ? "active" : ""}>Goals</NavLink></li>
+        <ul className="sidebar-nav" onClick={closeSidebar}>
+          <li><a href="/dashboard" className="active">Dashboard</a></li>
+          <li><a href="/transactions">Transactions</a></li>
+          <li><a href="/accounts">Accounts</a></li>
+          <li><a href="/budgets">Budgets</a></li>
+          <li><a href="/goals">Goals</a></li>
         </ul>
-      </nav>
-      <main className="main-content">{children}</main>
-    </div>
+      </div>
+
+      <main className={`main-content ${sidebarOpen ? "shifted" : ""}`}>
+        {children}
+      </main>
+    </>
   );
 }

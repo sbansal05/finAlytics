@@ -13,13 +13,108 @@
   padding-top: 35px;
   overflow-y: auto;
   color: #b6bece;
+  font-size: 1.08rem;
+  box-sizing: border-box;
+  transition: width 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-logo {
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.42rem;
+  font-weight: 900;
+  color: #5ecfec;
+  margin-bottom: 25px;
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sidebar-nav li a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  padding: 14px 32px;
+  border-radius: 6px 32px 32px 6px;
+  margin-bottom: 3px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-nav li a.active,
+.sidebar-nav li a:hover {
+  background-color: #20bfcf;
+  color: #23242f;
+  font-weight: bold;
 }
 
 .main-content {
-  margin-left: 210px; /* width of sidebar */
+  margin-left: 210px;
   padding: 40px 30px;
-  flex: 1;
   background-color: #181b20;
   min-height: 100vh;
   box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  background-color: #20bfcf;
+  color: #23242f;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  z-index: 1100;
+  cursor: pointer;
+}
+
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #5ecfec;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1200;
+}
+
+/* Responsive styles for small screens */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    overflow: hidden;
+    position: fixed;
+    z-index: 1100;
+  }
+
+  .sidebar.open {
+    width: 210px;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .main-content.shifted {
+    margin-left: 210px;
+  }
+
+  .sidebar-toggle-btn {
+    display: block;
+  }
+
+  .sidebar-close-btn {
+    display: block;
+  }
 }
