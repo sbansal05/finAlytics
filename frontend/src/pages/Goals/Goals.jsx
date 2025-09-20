@@ -121,7 +121,7 @@ export default function Goals() {
   }
 
   return (
-    <Layout>
+    
       <section className="goals-section">
         <div className="goals-header-row">
           <span className="goals-title">Financial Goals</span>
@@ -170,7 +170,6 @@ export default function Goals() {
             </div>
           ))}
         </div>
-        {/* MODAL FORM */}
         {showModal && (
           <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && closeModal()}>
             <form className="modal-form" onSubmit={handleSubmit}>
@@ -243,6 +242,6 @@ export default function Goals() {
           </div>
         )}
       </section>
-    </Layout>
+    
   );
 }

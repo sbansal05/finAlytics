@@ -30,21 +30,8 @@ const userSchema = new Schema({
         default: null
     },
 
-    preferences: {
-        currency: {
-            type: String,
-            default: 'USD'
-        },
-        dateFormat: {
-            type: String,
-            default: 'MM/DD/YYYY'
-        },
-        theme: {
-            type: String,
-            enum: ['light', 'dark'],
-            default: 'light'
-        }
-    }
+    
+        
 }, {
     timestamps: true
 });

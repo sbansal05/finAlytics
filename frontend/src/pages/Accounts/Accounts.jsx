@@ -76,7 +76,6 @@ export default function Accounts() {
   }
 
   return (
-    <Layout>
       <section className="accounts-section" style={{ padding: "2rem 1rem" }}>
         <div className="accounts-header-row">
           <span className="accounts-title">Accounts</span>
@@ -126,6 +125,5 @@ export default function Accounts() {
           )}
         </div>
       </section>
-    </Layout>
   );
 }

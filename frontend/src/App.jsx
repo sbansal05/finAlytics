@@ -1,112 +1,42 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { AuthContext } from "./context/AuthContext.jsx";
-import Login from "./pages/Login/Login.jsx";
-import Dashboard from "./pages/Dashboard/Dashboard.jsx";
-import TransactionsList from "./pages/Transactions/TransactionsList.jsx";
-import TransactionForm from "./pages/Transactions/TransactionForm.jsx";
-import Layout from "./components/Layout.jsx";
-import Accounts from "./pages/Accounts/Accounts.jsx";
-import Budgets from "./pages/Budgets/Budgets.jsx";
-import Goals from "./pages/Goals/Goals.jsx";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { PrivateRoute } from "./context/PrivateRoute";
+import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import TransactionsList from "./pages/Transactions/TransactionsList";
+import TransactionForm from "./pages/Transactions/TransactionForm";
+import Layout from "./components/Layout";
+import Accounts from "./pages/Accounts/Accounts";
+import Budgets from "./pages/Budgets/Budgets";
+import Goals from "./pages/Goals/Goals";
 
 function App() {
-  const { token } = useContext(AuthContext);
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <Dashboard />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/transactions"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <TransactionsList />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/transactions/add"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <TransactionForm />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/transactions/edit/:id"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <TransactionForm />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/accounts"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <Accounts />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/budgets"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <Budgets />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/goals"
-          element={
-            token
-              ? (
-                  <Layout>
-                    <Goals />
-                  </Layout>
-                )
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="*"
-          element={<Navigate to={token ? "/dashboard" : "/login"} />}
-        />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="transactions" element={<TransactionsList />} />
+            <Route path="transactions/add" element={<TransactionForm />} />
+            <Route path="transactions/edit/:id" element={<TransactionForm />} />
+            <Route path="accounts" element={<Accounts />} />
+            <Route path="budgets" element={<Budgets />} />
+            <Route path="goals" element={<Goals />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

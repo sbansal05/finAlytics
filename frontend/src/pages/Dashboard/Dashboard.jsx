@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import Layout from "../../components/Layout.jsx";
+
 import "../../styles/global.css";
 import "./Dashboard.css";
 
@@ -43,70 +43,74 @@ export default function Dashboard() {
     if (token) fetchDashboardData();
   }, [token]);
 
-  if (loading) return <Layout><p>Loading Dashboard...</p></Layout>;
-  if (error) return <Layout><p style={{ color: "red" }}>{error}</p></Layout>;
+  if (loading) return <p>Loading Dashboard...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <Layout>
-      <div>
-        <div className="card-row">
-          <div className="card">
-            <div className="label">Total Balance</div>
-            <div className="value">${summary.net.toFixed(2)}</div>
-          </div>
-          <div className="card">
-            <div className="label">Monthly Income</div>
-            <div className="value income">${summary.income.toFixed(2)}</div>
-          </div>
-          <div className="card">
-            <div className="label">Monthly Expenses</div>
-            <div className="value expense">${Math.abs(summary.expense).toFixed(2)}</div>
-          </div>
+    <div>
+      <div className="card-row">
+        <div className="card">
+          <div className="label">Total Balance</div>
+          <div className="value">${summary.net.toFixed(2)}</div>
         </div>
-
-        <div className="dashboard-section">
-          <h2>Recent Transactions</h2>
-          <ul className="dashboard-list">
-            {transactions.map((tx) => (
-              <li key={tx._id}>
-                <div>
-                  <div className="description">{tx.description}</div>
-                  <small>{new Date(tx.date).toLocaleDateString()} • {tx.category}</small>
-                </div>
-                <div className={`amount ${tx.amount >= 0 ? "positive" : "negative"}`}>${Math.abs(tx.amount).toFixed(2)}</div>
-              </li>
-            ))}
-          </ul>
+        <div className="card">
+          <div className="label">Monthly Income</div>
+          <div className="value income">${summary.income.toFixed(2)}</div>
         </div>
+        <div className="card">
+          <div className="label">Monthly Expenses</div>
+          <div className="value expense">${Math.abs(summary.expense).toFixed(2)}</div>
+        </div>
+      </div>
 
-        <div className="card-row">
-          <div style={{ flex: 1 }}>
-            <div className="spending-center">
-              <h2>Spending by Category</h2>
-              {categoryData.length > 0 ? (
-                <PieChart width={350} height={250}>
-                  <Pie
-                    data={categoryData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={90}
-                    stroke="#23272f"
-                    strokeWidth={2}
-                  >
-                    {categoryData.map((entry, idx) => <Cell key={`cell-${idx}`} fill={CATEGORY_COLORS[idx % CATEGORY_COLORS.length]} />)}
-                  </Pie>
-                  <Tooltip formatter={(value) => `$${value}`} />
-                  <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ color: "#f3f6fa", fontWeight: 600, fontSize: "1rem" }} />
-                </PieChart>
-              ) : (
-                <p>No category data to display.</p>
-              )}
-            </div>
+      <div className="dashboard-section">
+        <h2>Recent Transactions</h2>
+        <ul className="dashboard-list">
+          {transactions.map((tx) => (
+            <li key={tx._id}>
+              <div>
+                <div className="description">{tx.description}</div>
+                <small>{new Date(tx.date).toLocaleDateString()} • {tx.category}</small>
+              </div>
+              <div className={`amount ${tx.amount >= 0 ? "positive" : "negative"}`}>${Math.abs(tx.amount).toFixed(2)}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="card-row">
+        <div style={{ flex: 1 }}>
+          <div className="spending-center">
+            <h2>Spending by Category</h2>
+            {categoryData.length > 0 ? (
+              <PieChart width={350} height={250}>
+                <Pie
+                  data={categoryData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  stroke="#23272f"
+                  strokeWidth={2}
+                >
+                  {categoryData.map((entry, idx) => (
+                    <Cell key={`cell-${idx}`} fill={CATEGORY_COLORS[idx % CATEGORY_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => `$${value}`} />
+                <Legend
+                  verticalAlign="bottom"
+                  iconType="circle"
+                  wrapperStyle={{ color: "#f3f6fa", fontWeight: 600, fontSize: "1rem" }}
+                />
+              </PieChart>
+            ) : (
+              <p>No category data to display.</p>
+            )}
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }

@@ -133,7 +133,6 @@ export default function Budgets() {
   }
 
   return (
-    <Layout>
       <section className="budgets-section">
         <div className="budgets-header-row">
           <span className="budgets-title">Budgets</span>
@@ -143,7 +142,6 @@ export default function Budgets() {
         </div>
         <div>
           {budgets.map(budget => {
-            // For demo: simulate spent/random
             const spent = spending[`${budget.category}_${budget.month}`] ?? Math.round(budget.amount * Math.random() * 0.7 * 100) / 100;
             const percentUsed = Math.min((spent / budget.amount) * 100, 100);
             const remaining = Math.max(0, budget.amount - spent);
@@ -262,6 +260,6 @@ export default function Budgets() {
           </div>
         )}
       </section>
-    </Layout>
+    
   );
 }
