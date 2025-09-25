@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./Signup.css";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function Signup() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -16,7 +17,7 @@ export default function Signup() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await axios.post("http://localhost:4000/api/v1/auth/signup", formData);
+      const res = await axios.post(`${apiUrl}/api/v1/auth/signup`, formData);
       if (res.data.token) {
         login(res.data.token);
         navigate("/dashboard");

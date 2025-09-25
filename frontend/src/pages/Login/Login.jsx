@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./Login.css";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ export default function Login() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await axios.post("http://localhost:4000/api/v1/auth/signin", { email, password });
+      const res = await axios.post(`${apiUrl}/api/v1/auth/signin`, { email, password });
       if (res.data.token) {
         login(res.data.token);
         navigate("/dashboard");
