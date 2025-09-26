@@ -17,7 +17,7 @@ export default function Signup() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await axios.post(`${apiUrl}/api/v1/auth/signup`, formData);
+      const res = await axios.post(`${apiUrl}/v1/auth/signup`, formData);
       if (res.data.token) {
         login(res.data.token);
         navigate("/dashboard");
