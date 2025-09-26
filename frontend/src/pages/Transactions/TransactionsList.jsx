@@ -24,7 +24,7 @@ export default function TransactionsList() {
   async function fetchData() {
     try {
       const headers = { headers: { Authorization: `Bearer ${token}` } };
-      const txRes = await axios.get(`${apiUrl}/api/v1/transaction`, headers);
+      const txRes = await axios.get(`${apiUrl}/v1/transaction`, headers);
       setTransactions(txRes.data.transactions || []);
       const catSet = new Set((txRes.data.transactions || []).map(tx => tx.category));
       setCategories([...catSet]);
