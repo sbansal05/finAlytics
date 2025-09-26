@@ -28,7 +28,7 @@ export default function TransactionsList() {
       setTransactions(txRes.data.transactions || []);
       const catSet = new Set((txRes.data.transactions || []).map(tx => tx.category));
       setCategories([...catSet]);
-      const accRes = await axios.get(`${apiUrl}/api/v1/account`, headers);
+      const accRes = await axios.get(`${apiUrl}/v1/account`, headers);
       setAccounts(accRes.data.accounts || []);
     } catch (error) {
       console.error("Failed to fetch data:", error);
@@ -68,7 +68,7 @@ export default function TransactionsList() {
   async function handleDelete(txId) {
     if (!window.confirm("Are you sure you want to delete this transaction?")) return;
     try {
-      await axios.delete(`${apiUrl}/api/v1/transaction/${txId}`, {
+      await axios.delete(`${apiUrl}/v1/transaction/${txId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchData();
