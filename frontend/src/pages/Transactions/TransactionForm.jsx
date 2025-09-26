@@ -34,13 +34,11 @@ export default function TransactionForm({
       };
 
       if (formData._id) {
-        // Edit existing transaction
-        await axios.put(`${apiUrl}/api/v1/transaction/${formData._id}`, formData, { headers });
+        await axios.put(`${apiUrl}/v1/transaction/${formData._id}`, formData, { headers });
       } else {
-        // Create new transaction
-        await axios.post(`${apiUrl}/api/v1/transaction`, formData, { headers });
+        await axios.post(`${apiUrl}/v1/transaction`, formData, { headers });
       }
-      onClose(); // Close modal and refresh parent
+      onClose(); 
     } catch (error) {
       setErrMsg("Failed to save transaction");
       console.error(error);
