@@ -23,9 +23,9 @@ export default function Dashboard() {
       try {
         setLoading(true);
         const [summaryRes, transRes, catRes] = await Promise.all([
-          axios.get(`${apiUrl}/api/v1/transaction/summary`, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get(`${apiUrl}/api/v1/transaction?limit=6`, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get(`${apiUrl}/api/v1/transaction/category-summary`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${apiUrl}/v1/transaction/summary`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${apiUrl}/v1/transaction?limit=6`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${apiUrl}/v1/transaction/category-summary`, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
         setSummary(summaryRes.data);
         setTransactions(transRes.data.transactions);
