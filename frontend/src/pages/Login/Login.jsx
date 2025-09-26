@@ -16,7 +16,7 @@ export default function Login() {
     e.preventDefault();
     setError(null);
     try {
-      const res = await axios.post(`${apiUrl}/api/v1/auth/signin`, { email, password });
+      const res = await axios.post(`${apiUrl}/v1/auth/signin`, { email, password });
       if (res.data.token) {
         login(res.data.token);
         navigate("/dashboard");
