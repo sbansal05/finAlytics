@@ -21,10 +21,9 @@ export default function Accounts() {
 
   async function fetchAccounts() {
     try {
-      const res = await axios.get(`${apiUrl}/api/v1/account`, {
+      const res = await axios.get(`${apiUrl}/v1/account`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // Filter active accounts only
       setAccounts(res.data.accounts.filter(acc => acc.isActive !== false));
     } catch {
       alert("Failed to fetch accounts");
@@ -35,11 +34,11 @@ export default function Accounts() {
     setError("");
     try {
       if (formData.id) {
-        await axios.put(`${apiUrl}/api/v1/account/${formData.id}`, formData, {
+        await axios.put(`${apiUrl}/v1/account/${formData.id}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post(`${apiUrl}/api/v1/account`, formData, {
+        await axios.post(`${apiUrl}/v1/account`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -66,7 +65,7 @@ export default function Accounts() {
   async function handleDelete(id) {
     if (!window.confirm("Are you sure you want to delete this account?")) return;
     try {
-      await axios.delete(`${apiUrl}/api/v1/account/${id}`, {
+      await axios.delete(`${apiUrl}/v1/account/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchAccounts();
