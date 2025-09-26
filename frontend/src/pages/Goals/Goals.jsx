@@ -25,7 +25,7 @@ export default function Goals() {
 
   async function fetchGoals() {
     try {
-      const res = await axios.get(`${apiUrl}/api/v1/goals`, {
+      const res = await axios.get(`${apiUrl}/v1/goals`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setGoals(res.data.goals);
@@ -79,11 +79,11 @@ export default function Goals() {
     e.preventDefault();
     try {
       if (editingGoal) {
-        await axios.put(`${apiUrl}/api/v1/goals/${editingGoal._id}`, form, {
+        await axios.put(`${apiUrl}/v1/goals/${editingGoal._id}`, form, {
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
-        await axios.post(`${apiUrl}/api/v1/goals`, form, {
+        await axios.post(`${apiUrl}/v1/goals`, form, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
@@ -97,7 +97,7 @@ export default function Goals() {
   async function handleDelete(id) {
     if (!window.confirm("Delete this goal?")) return;
     try {
-      await axios.delete(`${apiUrl}/api/v1/goals/${id}`, {
+      await axios.delete(`${apiUrl}/v1/goals/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchGoals();
@@ -106,7 +106,6 @@ export default function Goals() {
     }
   }
 
-  // Progress calculations
   function progress(goal) {
     const curr = Number(goal.currentAmount) || "";
     const target = Number(goal.targetAmount) || "";
