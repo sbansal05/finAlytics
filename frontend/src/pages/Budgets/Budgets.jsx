@@ -28,7 +28,7 @@ export default function Budgets() {
   const [editingBudget, setEditingBudget] = useState(null);
   const [form, setForm] = useState({ category: "", amount: "", month: "", year: "" });
 
-  const [spending, setSpending] = useState({}); // { category_month: spent }
+  const [spending, setSpending] = useState({}); 
 
   useEffect(() => {
     fetchBudgets();
@@ -37,7 +37,7 @@ export default function Budgets() {
 
   async function fetchBudgets() {
     try {
-      const res = await axios.get(`${apiUrl}/api/v1/budget`, {
+      const res = await axios.get(`${apiUrl}/v1/budget`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBudgets(res.data.budgets);
@@ -59,8 +59,6 @@ export default function Budgets() {
 
   function openModalForEdit(budget) {
     setEditingBudget(budget);
-    // extract year and month
-    // If your month field is "2025-09", split, else assume March, 2024, etc.
     let month = MONTHS[new Date().getMonth()];
     let year = new Date().getFullYear().toString();
     if (budget.month && /^\d{4}-\d{2}$/.test(budget.month)) {
@@ -91,16 +89,16 @@ export default function Budgets() {
   async function handleFormSubmit(e) {
     e.preventDefault();
     const monthNum = (MONTHS.indexOf(form.month) + 1).toString().padStart(2, "0");
-    const monthString = `${form.year}-${monthNum}`; // "2025-09"
+    const monthString = `${form.year}-${monthNum}`; 
     const payload = { category: form.category, amount: Number(form.amount), month: monthString };
 
     try {
       if (editingBudget) {
-        await axios.put(`${apiUrl}/api/v1/budget/${editingBudget._id}`, payload, {
+        await axios.put(`${apiUrl}/v1/budget/${editingBudget._id}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
-        await axios.post(`${apiUrl}/api/v1/budget`, payload, {
+        await axios.post(`${apiUrl}/v1/budget`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
@@ -114,7 +112,7 @@ export default function Budgets() {
   async function handleDelete(id) {
     if (!window.confirm("Delete this budget?")) return;
     try {
-      await axios.delete(`${apiUrl}/api/v1/budget/${id}`, {
+      await axios.delete(`${apiUrl}/v1/budget/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchBudgets();
