@@ -9,7 +9,7 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "build"
       }
     }
   ],
@@ -18,14 +18,9 @@
       "src": "/api/(.*)",
       "dest": "backend/server.js"
     },
-      { "src" : "/dashboard", "dest": "/" },
-      { "src" : "/transactions", "dest": "/" },
-      { "src" : "/dashboard", "dest": "/" },
-      { "src" : "/transactions/add", "dest": "/"},
-      { "src" : "/transactions/edit/:id", "dest": "/"},
-      { "src" : "/accounts", "dest": "/"},
-      { "src" : "/budgets", "dest": "/"},
-      { "src" : "/goals", "dest": "/"},
-      { "src" : "/", "dest": "/"}
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
