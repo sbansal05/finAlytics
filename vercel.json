@@ -26,6 +26,6 @@
       { "src" : "/accounts", "dest": "/"},
       { "src" : "/budgets", "dest": "/"},
       { "src" : "/goals", "dest": "/"},
-      { "src" : "*", "dest": "/"}
+      { "src" : "/", "dest": "/"}
   ]
 }
