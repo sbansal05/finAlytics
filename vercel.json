@@ -18,9 +18,9 @@
       "src": "/api/(.*)",
       "dest": "backend/server.js"
     },
-    
       { "src" : "dashboard", "dest": "/" },
       { "src" : "transactions", "dest": "/" },
+      { "src" : "dashboard", "dest": "/" },
       { "src" : "transactions/add", "dest": "/"},
       { "src" : "transactions/edit/:id", "dest": "/"},
       { "src" : "accounts", "dest": "/"},
