@@ -6,7 +6,7 @@ import "../../styles/global.css";
 import "./TransactionsList.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
-
+console.log(apiUrl);
 export default function TransactionsList() {
   const { token } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
