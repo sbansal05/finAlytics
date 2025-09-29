@@ -33,7 +33,7 @@ export default function Layout() {
           </button>
         )}
 
-        <div className="sidebar-logo">Finance Dashboard</div>
+        <div className="sidebar-logo">finAlytics</div>
 
         <nav>
           <ul className="sidebar-nav" onClick={closeSidebar}>
