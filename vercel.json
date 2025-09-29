@@ -19,8 +19,14 @@
       "dest": "backend/server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
-
+      { "src" : "dashboard", "dest": "/" },
+      { "src" : "transactions", "dest": "/" },
+      { "src" : "dashboard", "dest": "/" },
+      { "src" : "transactions/add", "dest": "/"},
+      { "src" : "transactions/edit/:id", "dest": "/"},
+      { "src" : "accounts", "dest": "/"},
+      { "src" : "budgets", "dest": "/"},
+      { "src" : "goals", "dest": "/"}
+      { "src" : "*", "dest": "/"}
   ]
 }
