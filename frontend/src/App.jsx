@@ -25,7 +25,7 @@ function App() {
             </PrivateRoute>
           }>
             <Route index element={<Dashboard />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="transactions" element={<TransactionsList />} />
             <Route path="transactions/add" element={<TransactionForm />} />
             <Route path="transactions/edit/:id" element={<TransactionForm />} />
