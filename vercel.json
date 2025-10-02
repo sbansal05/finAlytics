@@ -18,15 +18,21 @@
       "src": "/api/(.*)",
       "dest": "backend/server.js"
     },
-      { "src" : "/login", "dest": "/"},
-      { "src" : "/signup", "dest": "/"},
-      { "src" : "dashboard", "dest": "/" },
-      { "src" : "transactions", "dest": "/" },
-      { "src" : "transactions/add", "dest": "/"},
-      { "src" : "transactions/edit/:id", "dest": "/"},
-      { "src" : "accounts", "dest": "/"},
-      { "src" : "budgets", "dest": "/"},
-      { "src" : "goals", "dest": "/"},
-      { "src" : "*", "dest": "/"}
+    {
+      "src": "/(login|signup)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(dashboard|transactions|transactions/add|transactions/edit/.*|accounts|budgets|goals)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
